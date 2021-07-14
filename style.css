@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap");
+* {
+	font-family: "Lato", sans-serif;
+	font-weight: 300;
+}
+canvas {
+	top: 0;
+	left: 0;
+	position: fixed;
+}
+button,
+#content {
+	z-index: 100000;
+	position: relative;
+}
+
+#form {
+	padding: 10px;
+}
+label {
+	font-size: 30px;
+}
+.form-item {
+	padding: 10px;
+	color: black;
+	font-weight: bold;
+	font-size: 25px;
+}
+#lcity {
+	color: aliceblue;
+}
+#city {
+	padding: 5px;
+	font-size: 20px;
+	border-radius: 5px;
+}
+button {
+	font-size: 20px;
+	padding: 5px;
+	width: 240px;
+	background-color: #ffffff;
+	border-radius: 5px;
+	border: none;
+	transition: all 0.2s ease-in-out;
+}
+button:hover {
+	color: #cccccc;
+	background-color: black;
+	border: 1px solid #cccccc;
+}
+#para {
+	color: aliceblue;
+	padding: 10px;
+	font-size: 20px;
+}
+#content {
+	background: rgba(0, 0, 0, 0.4);
+	width: 40%;
+	border-radius: 10px;
+	border: 2px solid gainsboro;
+}
