@@ -1,3 +1,4 @@
+
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -5,7 +6,6 @@ import axios from 'axios'
 
 let clat = 0
 let clong = 0
-
 function placeObjectOnPlanet(object, lat, lon, radius) {
   var latRad = lat * (Math.PI / 180);
   var lonRad = -lon * (Math.PI / 180);
@@ -18,26 +18,29 @@ function placeObjectOnPlanet(object, lat, lon, radius) {
   object.rotation.set(0.0, -lonRad, latRad - Math.PI * 0.5);
 }
 
-
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.001, 1000000)
+
+const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.001, 1000)
+
 const renderer = new THREE.WebGLRenderer({
   canvas: document.getElementById("canvas")
 })
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
-renderer.shadowMap = true
 
+const sphereGeometry = new THREE.SphereGeometry(3, 50, 50)
 
-const sphereGeometry = new THREE.SphereGeometry(3.6, 50, 50)
 const sphereMaterial = new THREE.MeshStandardMaterial(
   {
     map: new THREE.TextureLoader().load('./globe.jpg'),
   }
 )
+
 sphereMaterial.reflectivity = 1
 sphereMaterial.roughness = 0.6
+
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+
 scene.add(sphere)
 
 
@@ -56,11 +59,11 @@ scene.add(moon)
 
 camera.position.set(11.38, 1, 16)
 
-const spotLight = new THREE.SpotLight(0xccee0ff, 3, 5000, Math.PI * 3 / 4, 0.5, 1.5)
-spotLight.position.set(0, 0, -2000)
+const spotLight = new THREE.SpotLight(0xccee0ff, 3, 50, Math.PI * 3 / 4, 0.5, 1.5)
+spotLight.position.set(0, 0, -20)
 scene.add(spotLight)
 
-const sunGeometry = new THREE.SphereGeometry(300, 50, 50)
+const sunGeometry = new THREE.SphereGeometry(30, 50, 50)
 const sunMaterial = new THREE.MeshStandardMaterial(
   {
     emissive: 0xFF5F1F,
@@ -70,7 +73,7 @@ const sunMaterial = new THREE.MeshStandardMaterial(
 sunMaterial.reflectivity = 1
 sunMaterial.roughness = 0.6
 const sun = new THREE.Mesh(sunGeometry, sunMaterial)
-sun.position.set(0, 0, -24000)
+sun.position.set(0, 0, -400)
 scene.add(sun)
 
 
@@ -82,42 +85,41 @@ const controls = new OrbitControls(camera, renderer.domElement)
 const light = new THREE.AmbientLight(0x404040); // soft white light
 scene.add(light);
 
-const objGeometry = new THREE.SphereGeometry(0.015, 20, 20)
+const objGeometry = new THREE.SphereGeometry(0.03, 20, 20)
 const objMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0xff0000, emissiveIntensity: 10 })
 const obj = new THREE.Mesh(objGeometry, objMaterial)
 scene.add(obj)
 
 
 const generateStar = () => {
-  const starGeometry = new THREE.SphereGeometry(0.2, 20, 20)
+  const starGeometry = new THREE.SphereGeometry(0.02, 20, 20)
   const starMaterial = new THREE.MeshStandardMaterial({ color: 0xaedafe, emissive: 0xffffff, emissiveIntensity: 1000 })
   const star = new THREE.Mesh(starGeometry, starMaterial)
-  const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(7000))
+  const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(80))
   star.position.set(x, y, z)
   scene.add(star)
 }
 //placeObjectOnPlanet(sphere, -0.1257, 51.505, 3)
 
-for (let x = 0; x < 15000; x++) {
+for (let x = 0; x < 5000; x++) {
   generateStar()
 }
 
-let val = 0.001
+let val = 0.005
 let time = 0
+
 const animate = () => {
+
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
   sphere.rotation.y += 0.000003
-  moon.rotation.y += 0.005
+  moon.rotation.y += 0.0027
   time += val
   if (time > 1080) time = 0
-  moon.position.x = 100 * Math.cos(time % 360)
-  moon.position.z = 80 * Math.sin(time % 360)
+  moon.position.x = 14 * Math.cos(time % 360)
+  moon.position.z = 8 * Math.sin(time % 360)
   controls.update()
 }
-
-const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
 
 animate()
 
@@ -129,7 +131,7 @@ document.getElementById("submit").addEventListener('click', (e) => {
     (res) => {
       clat = res.data.coord.lat
       clong = res.data.coord.lon
-      placeObjectOnPlanet(obj, clat, clong, 3.6)
+      placeObjectOnPlanet(obj, clat, clong, 3)
       console.log(res.data)
       document.getElementById('cityName').innerHTML = res.data.name
       document.getElementById('country').innerHTML = `Counrty code: ${res.data.sys.country}`
@@ -140,4 +142,7 @@ document.getElementById("submit").addEventListener('click', (e) => {
     }
   )
 })
+
+
+
 
